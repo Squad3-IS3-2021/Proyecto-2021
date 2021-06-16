@@ -1,0 +1,14 @@
+URLs aceptadas:
+- import-api-squad3-is3.herokuapp.com
+
+Usuarios aceptados:
+- testsquad3is3@gmail.com
+
+Credenciales de OAuth para Google:
+Client ID:
+- 256305950953-ibgplubr7m4rrqipaqope295qtobhoci.apps.googleusercontent.com
+
+Client Secret:
+- PoJ4hPBZBpxwoOb2D0NZohoB
+
+
