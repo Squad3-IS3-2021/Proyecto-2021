@@ -27,7 +27,3 @@ def testURL():
     return jsonify(
         message='hello-world'
     )
-    
-
-if __name__ == "__main__":
-    app.run()
