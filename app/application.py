@@ -5,13 +5,14 @@ from datetime import datetime
 import pickle
 import pytz
 
+
 CLIENT_ID = '_EnkRaQwvl4aI9_5892h_AIUtI2TpvJ_'
 CLIENT_SECRET = 'tZDDBnlupQbP_seiAj2ccuTCIxvEhvKFLMgC1NDnLxNYF94hNdMsg-_an1VqsFSXTE1TlSnktDzOr7zfbD3jXA'
 CRED_PATH = '../credentials/credential.txt'
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-a=0
+
 
 cronofy = pycronofy.Client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
@@ -97,9 +98,12 @@ def getTasks():
         to_date=to_date,
         tzid=timezone_id
     ).all()
-
+    listaAux= []
+    i=0
+    for event in allEvents:
+    	listaAux.append([event.get("summary"),event.get("created"),event.get("description")])
     return jsonify(
-        allEvents
+        listaAux
     )
 
 @app.route('/setup', methods=['GET'])
@@ -146,4 +150,5 @@ def checkCredentials():
             token_expiration=auth['token_expiration']
         )
     return Response('Loaded credentials successfully', status=200)
+
 
