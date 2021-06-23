@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify, redirect, Response
 import pycronofy
-import ast
 import os
 from datetime import datetime
-import json
 import pickle
 import pytz
 
@@ -101,7 +99,7 @@ def getTasks():
     ).all()
 
     return jsonify(
-        reply
+        allEvents
     )
 
 @app.route('/setup', methods=['GET'])
