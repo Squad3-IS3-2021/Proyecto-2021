@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify, redirect, Response
 import pycronofy
 import ast
 import os
@@ -18,12 +18,36 @@ app.config["DEBUG"] = True
 cronofy = pycronofy.Client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
 
+def isLoggedIn():
+    try:
+        reply = cronofy.account()
+        return True
+    except:
+        return Response('Not Logged In', status=401)
+
 
 @app.route('/', methods=['GET'])
 def home():
     return jsonify(
         message='hello-world'
     )
+@app.route('/getAccountDetails', methods=['GET'])
+def getAccDetails():
+    if isLoggedIn():
+        return jsonify(cronofy.account())
+    return Response('Not Logged In', status=401)
+
+@app.route('/getCalendars', methods=['GET'])
+def getCalendars():
+    if isLoggedIn():
+        return jsonify(cronofy.list_calendars())
+    return Response('Not Logged In', status=401)
+
+@app.route('/getGoogleCalId', methods=['GET'])
+def getGoogleCalId():
+    if isLoggedIn():
+        return jsonify(calendar_id = ((cronofy.list_calendars())[0])['calendar_id'])
+    return Response('Not Logged In', status=401)
 
 @app.route('/getAuthCode', methods=['GET'])
 def testURL():
@@ -58,31 +82,23 @@ def authCallback():
         refresh_token=auth['refresh_token'],
         token_expiration=auth['token_expiration']
     )
-    return jsonify(
-        message='AuthOK'
-    )
-
-@app.route('/getAccountData', methods=['GET'])
-def getAccData():
-    reply = cronofy.account()
-    print(reply)
-    return jsonify(
-        reply
-    )
+    return Response('Auth OK', status=200)
+    
 @app.route('/getTasks', methods=['POST'])
 def getTasks():
+    isLoggedIn()
     #FALTA ARREGLAR!!
     from_date = datetime.strptime(request.args.get('from_date'), '%Y-%m-%dT%H:%M:%SZ')
     to_date = datetime.strptime(request.args.get('to_date'), '%Y-%m-%dT%H:%M:%SZ')
-    calendar_id = request.args.get('calendar_id')
+    calendar_id = ((cronofy.list_calendars())[0])['calendar_id']
     timezone_id = 'US/Eastern'
 
-    events = cronofy.read_events(
+    allEvents = cronofy.read_events(
         calendar_ids=(calendar_id,),
         from_date=from_date,
         to_date=to_date,
-        tzid=timezone_id # This argument sets the timezone to local, vs utc.
-    )
+        tzid=timezone_id
+    ).all()
 
     return jsonify(
         reply
@@ -131,7 +147,5 @@ def checkCredentials():
             refresh_token=auth['refresh_token'],
             token_expiration=auth['token_expiration']
         )
-    return jsonify(
-        message='setupOK'
-    )
+    return Response('Loaded credentials successfully', status=200)
 
