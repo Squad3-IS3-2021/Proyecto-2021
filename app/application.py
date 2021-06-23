@@ -11,7 +11,7 @@ CRED_PATH = '../credentials/credential.txt'
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-
+a=0
 
 cronofy = pycronofy.Client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
