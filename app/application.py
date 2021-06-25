@@ -52,7 +52,7 @@ def getGoogleCalId():
 def testURL():
     # Initial authorization, we send an auth link that the frontend must show to the user. User clicks and API gets a petition to authCallback, creating credentials.txt
     print(cronofy)
-    url = cronofy.user_auth_link('http://localhost:8000/authCallback')
+    url = cronofy.user_auth_link('https://import-api-squad3-is3.herokuapp.com/authCallback')
 
     return jsonify(
         authURL=url
