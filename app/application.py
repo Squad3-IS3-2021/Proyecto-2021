@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import pickle
 import pytz
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 
 CLIENT_ID = '_EnkRaQwvl4aI9_5892h_AIUtI2TpvJ_'
@@ -13,7 +13,7 @@ CRED_PATH = '../credentials/credential.txt'
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 
