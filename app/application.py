@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 import pickle
 import pytz
+from flask_cors import CORS, cross_origin
+
 
 CLIENT_ID = '_EnkRaQwvl4aI9_5892h_AIUtI2TpvJ_'
 CLIENT_SECRET = 'tZDDBnlupQbP_seiAj2ccuTCIxvEhvKFLMgC1NDnLxNYF94hNdMsg-_an1VqsFSXTE1TlSnktDzOr7zfbD3jXA'
@@ -11,6 +13,8 @@ CRED_PATH = '../credentials/credential.txt'
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 
 cronofy = pycronofy.Client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
@@ -51,7 +55,7 @@ def getGoogleCalId():
 def testURL():
     # Initial authorization, we send an auth link that the frontend must show to the user. User clicks and API gets a petition to authCallback, creating credentials.txt
     print(cronofy)
-    url = cronofy.user_auth_link('http://localhost:8000/authCallback')
+    url = cronofy.user_auth_link('https://import-api-squad3-is3.herokuapp.com/authCallback')
 
     return jsonify(
         authURL=url
@@ -97,9 +101,12 @@ def getTasks():
         to_date=to_date,
         tzid=timezone_id
     ).all()
-
+    listaAux= []
+    i=0
+    for event in allEvents:
+    	listaAux.append([event.get("summary"),event.get("created"),event.get("description")])
     return jsonify(
-        allEvents
+        listaAux
     )
 
 @app.route('/setup', methods=['GET'])
@@ -146,4 +153,5 @@ def checkCredentials():
             token_expiration=auth['token_expiration']
         )
     return Response('Loaded credentials successfully', status=200)
+
 
